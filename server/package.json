@@ -1,0 +1,19 @@
+{
+  "name": "desafio-globo-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igordrangel/desafio-globo.git"
+  },
+  "author": "Igor D. Rangel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/igordrangel/desafio-globo/issues"
+  },
+  "homepage": "https://github.com/igordrangel/desafio-globo#readme"
+}
