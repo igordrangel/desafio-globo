@@ -53,7 +53,7 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 					           helperText={this.errors()?.password?.errorMessage}/>
 					
 					<ButtonGroup direction="right">
-						<Button size="small" disableElevation type="submit" variant="contained" color="primary"
+						<Button size="medium" disableElevation type="submit" variant="contained" color="primary"
 						        disabled={this.invalid}>Entrar</Button>
 					</ButtonGroup>
 				</form>

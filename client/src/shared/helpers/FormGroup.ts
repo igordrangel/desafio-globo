@@ -16,6 +16,7 @@ export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsTy
 		Object.keys(initialState).forEach(prop => {
 			this.values[prop] = initialState[prop];
 		});
+		this.validateForm();
 	}
 	
 	public handle(prop: keyof FormDataType) {
