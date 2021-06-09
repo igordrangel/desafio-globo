@@ -1,0 +1,10 @@
+.btn-group {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+.btn-group.left {justify-content: flex-start;}
+.btn-group.center {justify-content: center;}
+.btn-group.right {justify-content: flex-end;}
