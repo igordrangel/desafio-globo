@@ -183,15 +183,6 @@ export const Menu: FC = (prop) => {
 	        </List>
 	        <Divider/>
 	        <List>
-		        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-			        <ListItem className={classes.listItem} button key={text}>
-				        <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-				        <ListItemText primary={text}/>
-			        </ListItem>
-		        ))}
-	        </List>
-	        <Divider/>
-	        <List>
 		        <ListItem onClick={() => TokenFactory.logout()} className={classes.listItem} button key="Sair">
 			        <ListItemIcon><ExitToAppIcon/></ListItemIcon>
 			        <ListItemText secondary="Sair"/>

@@ -6,6 +6,9 @@ export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsTy
 	private values: any = {};
 	private errorsList: any = {};
 	public invalid: boolean = false;
+	public btnLabel: string = "Enviar";
+	public loading?: boolean = false;
+	public success?: boolean = false;
 	
 	protected constructor(
 		props: any,
@@ -25,6 +28,13 @@ export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsTy
 			this.validate(prop)(event);
 			this.setState(this);
 		}
+	}
+	
+	public setLoader(loading: boolean, success?: boolean, label?: string) {
+		this.loading = loading;
+		this.success = success;
+		if (label) this.btnLabel = label;
+		this.setState(this);
 	}
 	
 	public errors(): ErrorsType {

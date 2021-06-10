@@ -1,4 +1,4 @@
-import { Button, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import React from "react";
 import { SigninService } from "../../shared/service/signin/SigninService";
 import "./styles.css";
@@ -6,6 +6,8 @@ import { SigninInterface } from "../../shared/service/signin/SigninInterface";
 import { ButtonGroup } from "../../shared/components/btn-group/ButtonGroup";
 import { Validator, ValidatorErrorInterface } from "../../shared/helpers/Validator";
 import { FormGroup } from "../../shared/helpers/FormGroup";
+import { ButtonSubmit } from "../../shared/components/btn-submit/ButtonSubmit";
+import { TokenService } from "../../shared/service/token/TokenService";
 
 const signinService = new SigninService();
 
@@ -27,10 +29,22 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 			],
 			password: [{validator: 'required', errorMessage: 'Informe uma senha.'}]
 		}));
+		this.btnLabel = 'Entrar';
 	}
 	
 	private signIn() {
-		signinService.login(this.getRawValue()).subscribe();
+		this.setLoader(true, false, 'Autenticando...')
+		signinService.login(this.getRawValue()).subscribe(response => {
+			if (response.auth) {
+				this.setLoader(false, response.auth, 'Usuário autenticado com sucesso!');
+				setTimeout(() => {
+					const tokenService = new TokenService();
+					tokenService.setToken(response.token ?? '');
+				}, 2000);
+			} else {
+				this.setLoader(false, false, 'Tentar Novamente');
+			}
+		});
 	}
 	
 	render() {
@@ -55,8 +69,8 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 					           helperText={this.errors()?.password?.errorMessage}/>
 					
 					<ButtonGroup direction="right">
-						<Button size="medium" disableElevation type="submit" variant="contained" color="primary"
-						        disabled={this.invalid}>Entrar</Button>
+						<ButtonSubmit btnLabel={this.btnLabel} loading={this.loading} success={this.success}
+						              disabled={this.invalid}/>
 					</ButtonGroup>
 				</form>
 			</section>
