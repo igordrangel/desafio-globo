@@ -1,20 +1,42 @@
-const TOKEN_STORAGE_NAME = 'desafionGloboToken';
+import jwt from 'jwt-decode';
+
+import { BehaviorSubject } from "rxjs";
+import { TokenFactory } from "./TokenFactory";
 
 export class TokenService {
+	private token$ = new BehaviorSubject<string>('');
+	private intervalToken: any;
 	
-	isLogged() {
-		return !!this.getToken();
+	constructor() {
+		this.verifySession();
 	}
 	
-	setToken(token: string) {
-		localStorage.setItem(TOKEN_STORAGE_NAME, token);
+	public setToken(token: string) {
+		if (TokenFactory.hasToken()) { this.token$.next(token); }
+		TokenFactory.setToken(token);
 	}
 	
-	getToken() {
-		return localStorage.getItem(TOKEN_STORAGE_NAME);
+	public getToken(): BehaviorSubject<string> {
+		return this.token$;
 	}
 	
-	removeToken() {
-		localStorage.removeItem(TOKEN_STORAGE_NAME);
+	public getDecodedToken<T>(): T|null {
+		return (TokenFactory.hasToken() ? jwt(TokenFactory.getToken()) : null);
+	}
+	
+	public removeToken() {
+		TokenFactory.removeToken();
+	}
+	
+	private verifySession() {
+		TokenFactory.init();
+		this.token$.next(TokenFactory.getToken());
+		this.intervalToken = setInterval(() => {
+			if (!TokenFactory.hasToken() && this.token$.getValue()) {
+				this.token$.next('');
+			} else if (TokenFactory.hasToken() && !this.token$.getValue()) {
+				this.token$.next(TokenFactory.getToken());
+			}
+		}, 300);
 	}
 }

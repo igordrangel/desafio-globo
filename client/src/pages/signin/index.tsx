@@ -17,18 +17,20 @@ interface SigninErrorsInterface {
 export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface> {
 	
 	constructor(props: any) {
-		super(
-			props, {
-				email: '',
-				password: ''
-			}, new Validator({
-				email: [
-					{validator: 'required', errorMessage: 'Informe seu email.'},
-					{validator: 'email', errorMessage: 'E-mail inválido.'}
-				],
-				password: [{validator: 'required', errorMessage: 'Informe uma senha.'}]
-			})
-		);
+		super(props, {
+			email: '',
+			password: ''
+		}, new Validator({
+			email: [
+				{validator: 'required', errorMessage: 'Informe seu email.'},
+				{validator: 'email', errorMessage: 'E-mail inválido.'}
+			],
+			password: [{validator: 'required', errorMessage: 'Informe uma senha.'}]
+		}));
+	}
+	
+	private signIn() {
+		signinService.login(this.getRawValue()).subscribe();
 	}
 	
 	render() {
@@ -37,7 +39,7 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 				<form id="formLogin" onSubmit={event => {
 					event.preventDefault();
 					event.stopPropagation();
-					signinService.login(this.getRawValue());
+					this.signIn();
 				}} noValidate autoComplete="off">
 					<h1> Bem-Vindo!</h1>
 					<small>Informe abaixo seus dados de acesso</small>
