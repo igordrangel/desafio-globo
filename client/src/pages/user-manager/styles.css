@@ -1,0 +1,4 @@
+.content {display: flex;align-items: center;flex-direction: column;width: 100%;padding: 20px;box-sizing: border-box;}
+nav {width: 80%;text-align: right;padding: 0 0 10px;}
+.btn-add {background-color: #1565C0!important;color: #fff!important;}
+.list {width: 80%;}

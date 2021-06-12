@@ -1,0 +1,9 @@
+.charts {display: flex;justify-content: space-between;align-items: center;flex-direction: column;height: 100%;padding: 20px;box-sizing: border-box;}
+.charts .chart {width: 60%;margin: 5px;box-shadow: 0 1px 3px rgba(0,0,0,.3);}
+.charts .chart h2,
+.status h2 {font-family: Roboto, sans-serif;text-align: center;font-size: 1.3em;margin: 0;padding: 20px 0 0;color: #616161;}
+.charts .chart:first-child {margin-left: 0;}
+.charts .chart:last-child {margin-right: 0;}
+.status h3 {font-family: Roboto, sans-serif;text-align: center;font-size: 3em;margin: 0;padding: 0;}
+.status h3.green {color: #388E3C;}
+.status h3.red {color: #E53935;}
