@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC } from "react";
+import React, { ChangeEvent, FC, useEffect } from "react";
 import {
 	Checkbox,
 	createStyles,
@@ -21,6 +21,7 @@ import clsx from "clsx";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
+import { BehaviorSubject } from "rxjs";
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
 	createStyles({
@@ -105,6 +106,7 @@ interface DatatablePropsInterface {
 	setItemLine: (indexName: string, itemLine: any) => string | undefined;
 	deleteSelected: (selected: string[]) => void;
 	editItemLine: (itemLine: any) => void;
+	clearSelection$?: BehaviorSubject<boolean>;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -217,6 +219,16 @@ export const DataTable: FC<DatatablePropsInterface> = (props) => {
 	const [selected, setSelected] = React.useState<string[]>([]);
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
+	
+	useEffect(() => {
+		if (props.clearSelection$) {
+			props.clearSelection$.subscribe(clear => {
+				if (clear) {
+					setSelected([]);
+				}
+			})
+		}
+	}, [props, setSelected])
 	
 	const handleRequestSort = (event: React.MouseEvent<unknown>, property: any) => {
 		const isAsc = orderBy === property && order === 'asc';

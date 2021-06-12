@@ -2,8 +2,8 @@ import { ChangeEvent, Component } from "react";
 import { Validator } from "./Validator";
 
 type GenericObjectType = {[index: string]: any};
-export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsType> extends Component<any, any>{
-	private values: any = {};
+export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsType, PropsType> extends Component<PropsType, any>{
+	protected values: any = {};
 	private errorsList: any = {};
 	public invalid: boolean = false;
 	public btnLabel: string = "Enviar";
@@ -11,19 +11,29 @@ export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsTy
 	public success?: boolean = false;
 	
 	protected constructor(
-		props: any,
-		initialState: FormDataType,
+		props: PropsType,
 		private validator: Validator
 	) {
 		super(props);
+	}
+	
+	public initForm(initialState: FormDataType) {
 		Object.keys(initialState).forEach(prop => {
 			this.values[prop] = initialState[prop];
 		});
 		this.validateForm();
 	}
 	
+	public reset(btnLabel?: string) {
+		this.loading = false;
+		this.success = false;
+		if (btnLabel) this.btnLabel = btnLabel;
+		this.values = {};
+		this.validateForm();
+	}
+	
 	public handle(prop: keyof FormDataType) {
-		return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>) => {
 			this.values[prop] = event.target.value;
 			this.validate(prop)(event);
 			this.setState(this);
@@ -46,7 +56,7 @@ export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsTy
 	}
 	
 	private validate(prop: keyof FormDataType) {
-		return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { value: unknown }>) => {
 			this.errorsList[prop] = this.validator.handle(event.target.value, prop);
 			this.validateForm();
 		}

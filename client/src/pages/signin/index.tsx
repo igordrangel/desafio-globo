@@ -16,13 +16,10 @@ interface SigninErrorsInterface {
 	password: ValidatorErrorInterface | null;
 }
 
-export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface> {
+export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface, any> {
 	
 	constructor(props: any) {
-		super(props, {
-			email: '',
-			password: ''
-		}, new Validator({
+		super(props, new Validator({
 			email: [
 				{validator: 'required', errorMessage: 'Informe seu email.'},
 				{validator: 'email', errorMessage: 'E-mail inválido.'}
@@ -48,6 +45,11 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 	}
 	
 	render() {
+		this.initForm({
+			email: '',
+			password: ''
+		});
+		
 		return (
 			<section className="container">
 				<form id="formLogin" onSubmit={event => {
@@ -61,6 +63,7 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 					<TextField id="email" type="email" label="E-mail" variant="outlined" margin="dense" fullWidth required
 					           onChange={this.handle('email')}
 					           error={this.errors()?.email?.error}
+					           autoFocus
 					           helperText={this.errors()?.email?.errorMessage ?? 'Ex.: seunome@teste.com.br'}/>
 					
 					<TextField id="password" type="password" label="Senha" variant="outlined" margin="dense" fullWidth required

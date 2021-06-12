@@ -95,6 +95,13 @@ const useStyles = makeStyles((theme: Theme) =>
 			width: `calc(100% - ${drawerWidth}px)`,
 			height: `calc(100vh - 60px)`,
 			flexGrow: 1
+		},
+		contentNotLogged: {
+			position: 'relative',
+			top: `0`,
+			width: `100%`,
+			height: `100vh`,
+			flexGrow: 1
 		}
 	}),
 );
@@ -152,7 +159,7 @@ export const Menu: FC = (prop) => {
 	];
 	
 	return (hidden ? (
-			<section className={classes.content}>
+			<section className={classes.contentNotLogged}>
 				{prop.children}
 			</section>
 		) : (
@@ -187,8 +194,7 @@ export const Menu: FC = (prop) => {
 						        [classes.drawerOpen]: open,
 						        [classes.drawerClose]: !open,
 					        }),
-				        }}
-			        >
+				        }}>
 				        <div className={classes.toolbar}>
 					        <IconButton onClick={handleDrawerClose}>
 						        {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
