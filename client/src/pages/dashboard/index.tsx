@@ -9,6 +9,7 @@ export const Dashboard: FC = () => {
 	const [statusClusterData, setStatusClusterData] = useState<'green'|'red'>("red");
 	
 	useEffect(() => {
+		const ac = new AbortController();
 		const elasticSearchService = new ElasticSearchService();
 		Promise.all([
 			elasticSearchService.getCpuUsage(),
@@ -43,6 +44,8 @@ export const Dashboard: FC = () => {
 			
 			setStatusClusterData(statusClusterResponse.data.status);
 		});
+		
+		return () => ac.abort();
 	}, [])
 	
 	return (

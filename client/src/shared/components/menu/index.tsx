@@ -121,6 +121,7 @@ export const Menu: FC = (prop) => {
 	const location = useLocation();
 	
 	useEffect(() => {
+		const ac = new AbortController();
 		const Guard = (isLogged: boolean) => {
 			const currentPath = window.location.pathname;
 			if (isLogged && currentPath === '/signin') {
@@ -139,6 +140,8 @@ export const Menu: FC = (prop) => {
 				setHidden(!token);
 			}
 		});
+		
+		return () => ac.abort();
 	}, [
 		history,
 		hidden,

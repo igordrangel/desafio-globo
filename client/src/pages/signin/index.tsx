@@ -27,6 +27,10 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 			password: [{validator: 'required', errorMessage: 'Informe uma senha.'}]
 		}));
 		this.btnLabel = 'Entrar';
+		this.initForm({
+			email: '',
+			password: ''
+		});
 	}
 	
 	private signIn() {
@@ -45,10 +49,6 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 	}
 	
 	render() {
-		this.initForm({
-			email: '',
-			password: ''
-		});
 		
 		return (
 			<section className="container">
