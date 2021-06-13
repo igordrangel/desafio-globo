@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from "react";
+import React, { FC, ReactElement, useEffect, useState } from "react";
 import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -14,11 +14,13 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import clsx from 'clsx';
-import { createStyles, makeStyles, Theme, useTheme } from "@material-ui/core";
+import { Avatar, createStyles, makeStyles, Theme, useTheme } from "@material-ui/core";
 import { TokenService } from "../../service/token/TokenService";
 import { TokenFactory } from "../../service/token/TokenFactory";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { Dashboard, SupervisedUserCircle } from "@material-ui/icons";
+import { UserInterface } from "../../service/user-manager/user.interface";
+import { deepPurple } from "@material-ui/core/colors";
 
 const drawerWidth = 330;
 
@@ -102,7 +104,11 @@ const useStyles = makeStyles((theme: Theme) =>
 			width: `100%`,
 			height: `100vh`,
 			flexGrow: 1
-		}
+		},
+		avatarPurple: {
+			color: theme.palette.getContrastText(deepPurple[500]),
+			backgroundColor: deepPurple[500],
+		},
 	}),
 );
 
@@ -118,6 +124,9 @@ export const Menu: FC = (prop) => {
 	const history = useHistory();
 	const [open, setOpen] = React.useState(false);
 	const [hidden, setHidden] = React.useState(false);
+	const [menuOptions, setMenuOptions] = useState<MenuOptionsInterface[]>([]);
+	const [loggedFirstLetterUsername, setLoggedFirstLetterUsername] = useState<string>('');
+	const [loggedUsername, setLoggedUsername] = useState<string>('');
 	const location = useLocation();
 	
 	useEffect(() => {
@@ -126,7 +135,7 @@ export const Menu: FC = (prop) => {
 			const currentPath = window.location.pathname;
 			if (isLogged && currentPath === '/signin') {
 				history.push('/dashboard');
-			} else if (!isLogged) {
+			} else if (!isLogged || currentPath === '/') {
 				history.push('/signin');
 			}
 		}
@@ -135,6 +144,20 @@ export const Menu: FC = (prop) => {
 		Guard(TokenFactory.hasToken());
 		tokenService.getToken().subscribe(token => {
 			Guard(!!token);
+			
+			if (TokenFactory.hasToken()) {
+				const loggedUser = tokenService.getDecodedToken<UserInterface>();
+				const loggedUsername = (loggedUser?.email ?? '').split('@')[0];
+				const menuOptions = [{label: 'Dashboard', link: '/dashboard', icon: <Dashboard/>}];
+				
+				if (loggedUser?.perfil === "ADMINISTRADOR") {
+					menuOptions.push({label: 'Gerenciamento de Usuários', link: '/user-manager', icon: <SupervisedUserCircle/>});
+				}
+				
+				setMenuOptions(menuOptions);
+				setLoggedUsername(loggedUsername);
+				setLoggedFirstLetterUsername(loggedUsername.slice(0, 1).toUpperCase())
+			}
 			
 			if (!token !== hidden) {
 				setHidden(!token);
@@ -145,7 +168,10 @@ export const Menu: FC = (prop) => {
 	}, [
 		history,
 		hidden,
-		setHidden
+		setHidden,
+		setMenuOptions,
+		setLoggedUsername,
+		setLoggedFirstLetterUsername
 	]);
 	
 	const handleDrawerOpen = () => {
@@ -155,11 +181,6 @@ export const Menu: FC = (prop) => {
 	const handleDrawerClose = () => {
 		setOpen(false);
 	};
-	
-	const menuOptions: MenuOptionsInterface[] = [
-		{label: 'Dashboard', link: '/dashboard', icon: <Dashboard/>},
-		{label: 'Gerenciamento de Usuários', link: '/user-manager', icon: <SupervisedUserCircle/>}
-	];
 	
 	return (hidden ? (
 			<section className={classes.contentNotLogged}>
@@ -203,6 +224,14 @@ export const Menu: FC = (prop) => {
 						        {theme.direction === 'rtl' ? <ChevronRightIcon/> : <ChevronLeftIcon/>}
 					        </IconButton>
 				        </div>
+				        <Divider/>
+				        <List>
+					        <ListItem>
+						        <ListItemIcon><Avatar
+							        className={classes.avatarPurple}>{loggedFirstLetterUsername}</Avatar></ListItemIcon>
+						        <ListItemText primary={loggedUsername}/>
+					        </ListItem>
+				        </List>
 				        <Divider/>
 				        <List>
 					        {menuOptions.map((option) => (

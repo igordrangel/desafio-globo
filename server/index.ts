@@ -15,8 +15,8 @@ api.listen(9000, async () => {
 	}
 	
 	for (const user of ([
-		{email: "usuariocomum@teste.com.br", perfil: "FUNCTIONARIO", password: "123"},
-		{email: "usuarioadm@teste.com.br", perfil: "ADMINITRADOR", password: "123"}
+		{email: "usuariocomum@teste.com.br", perfil: "FUNCIONARIO", password: "123"},
+		{email: "usuarioadm@teste.com.br", perfil: "ADMINISTRADOR", password: "123"}
 	] as Usuario[]).values()) {
 		await (new UsuarioRepository()).save(user).catch(e => null);
 	}

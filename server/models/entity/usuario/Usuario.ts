@@ -1,4 +1,4 @@
-export type UsuarioPerfilType = 'ADMINITRADOR'|'FUNCTIONARIO';
+export type UsuarioPerfilType = 'ADMINISTRADOR'|'FUNCIONARIO';
 
 export class Usuario {
 	id?: number;

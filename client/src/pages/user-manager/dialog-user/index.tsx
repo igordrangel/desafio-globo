@@ -1,6 +1,6 @@
-import { FormGroup } from "../../../helpers/FormGroup";
-import { UserInterface } from "../../../service/user-manager/user.interface";
-import { Validator } from "../../../helpers/Validator";
+import { FormGroup } from "../../../shared/helpers/FormGroup";
+import { UserInterface } from "../../../shared/service/user-manager/user.interface";
+import { Validator } from "../../../shared/helpers/Validator";
 import {
 	Button,
 	Dialog,
@@ -14,7 +14,7 @@ import {
 	TextField
 } from "@material-ui/core";
 import React from "react";
-import { ButtonSubmit } from "../../btn-submit/ButtonSubmit";
+import { ButtonSubmit } from "../../../shared/components/btn-submit/ButtonSubmit";
 
 interface DialogUserPropsInterface {
 	userEdit: UserInterface | null;
@@ -24,6 +24,7 @@ interface DialogUserPropsInterface {
 }
 
 export class DialogUser extends FormGroup<UserInterface, any, DialogUserPropsInterface> {
+	private opened = false;
 	
 	constructor(props: DialogUserPropsInterface) {
 		super(props, new Validator({
@@ -38,11 +39,16 @@ export class DialogUser extends FormGroup<UserInterface, any, DialogUserPropsInt
 	}
 	
 	render() {
-		this.initForm(this.props.userEdit ?? {
-			email: '',
-			perfil: 'FUNCIONARIO',
-			password: ''
-		});
+		if (this.props.open && this.props.open !== this.opened) {
+			this.initForm(this.props.userEdit ?? {
+				email: '',
+				perfil: 'FUNCIONARIO',
+				password: ''
+			});
+			this.opened = true;
+		} else if (!this.props.open) {
+			this.opened = false;
+		}
 		
 		return (
 			<Dialog open={this.props.open} onClose={() => this.props.handle(false)}
@@ -54,11 +60,8 @@ export class DialogUser extends FormGroup<UserInterface, any, DialogUserPropsInt
 					this.props
 					    .sendData(this.getRawValue())
 					    .then(() => {
-						    this.setLoader(false, true, 'Usuário salvo com sucesso!');
-						    setTimeout(() => {
-							    this.props.handle(false);
-							    this.reset("Salvar");
-						    }, 2000);
+						    this.props.handle(false);
+						    this.reset("Salvar");
 					    })
 					    .catch(() => this.setLoader(false, false, 'Tentar Novamente'));
 				}}>

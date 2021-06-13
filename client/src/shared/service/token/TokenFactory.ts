@@ -1,4 +1,4 @@
-const TOKEN_STORAGE_NAME = 'desafionGloboToken';
+const TOKEN_STORAGE_NAME = 'desafioGloboToken';
 
 export class TokenFactory {
 	

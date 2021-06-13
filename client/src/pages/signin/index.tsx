@@ -34,16 +34,21 @@ export class SigninPage extends FormGroup<SigninInterface, SigninErrorsInterface
 	}
 	
 	private signIn() {
-		this.setLoader(true, false, 'Autenticando...')
-		signinService.login(this.getRawValue()).subscribe(response => {
-			if (response.auth) {
-				this.setLoader(false, response.auth, 'Usuário autenticado com sucesso!');
-				setTimeout(() => {
-					const tokenService = new TokenService();
-					tokenService.setToken(response.token ?? '');
-				}, 2000);
-			} else {
-				this.setLoader(false, false, 'Tentar Novamente');
+		this.setLoader(true, false, 'Autenticando...');
+		signinService.login(this.getRawValue()).subscribe({
+			next: response => {
+				if (response.auth) {
+					this.setLoader(false, response.auth, 'Usuário autenticado com sucesso!');
+					setTimeout(() => {
+						const tokenService = new TokenService();
+						tokenService.setToken(response.token ?? '');
+					}, 2000);
+				} else {
+					this.setLoader(false, false, 'Tentar Novamente');
+				}
+			},
+			error: responseError => {
+				this.setLoader(false, false, "Tentar Novamente");
 			}
 		});
 	}

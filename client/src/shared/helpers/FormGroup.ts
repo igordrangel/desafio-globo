@@ -3,12 +3,14 @@ import { Validator } from "./Validator";
 
 type GenericObjectType = {[index: string]: any};
 export abstract class FormGroup<FormDataType extends GenericObjectType, ErrorsType, PropsType> extends Component<PropsType, any>{
-	protected values: any = {};
-	private errorsList: any = {};
 	public invalid: boolean = false;
 	public btnLabel: string = "Enviar";
 	public loading?: boolean = false;
 	public success?: boolean = false;
+	
+	protected values: any = {};
+	
+	private errorsList: any = {};
 	
 	protected constructor(
 		props: PropsType,
